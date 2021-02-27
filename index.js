@@ -1,6 +1,7 @@
 //require express,socketio
 const express = require("express");
-const app = express();
+
+const http = require("http");
 
 //require cors
 const cors = require("cors");
@@ -14,6 +15,9 @@ const socketio = require("socket.io");
 
 //routes controller
 const router = require("./router");
+
+const app = express();
+
 //cors middleware
 app.use(cors());
 
@@ -22,10 +26,7 @@ app.use(router);
 
 //express listen
 const PORT = process.env.PORT || 5000;
-const server = require("http").createServer(app);
-server.listen(PORT, () => {
-  console.log(`server started on port: ${PORT}`);
-});
+const server = http.createServer(app);
 
 //socket io setup with express server
 const io = socketio(
@@ -111,4 +112,8 @@ io.on("connection", (socket) => {
       });
     }
   });
+});
+
+server.listen(PORT, () => {
+  console.log(`server started on port: ${PORT}`);
 });
