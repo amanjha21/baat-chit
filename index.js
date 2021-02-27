@@ -1,30 +1,16 @@
 //require express,socketio
-const express = require("express");
-
 const http = require("http");
-
+const express = require("express");
+const socketio = require("socket.io");
 //require cors
 const cors = require("cors");
-
 //user functions
 const { addUser, removeUser, getUser, getUsersInRoom } = require("./users");
 
-const socketio = require("socket.io");
-
-// const http = require("http");
-
 //routes controller
 const router = require("./router");
-
 const app = express();
-
-//cors middleware
-app.use(cors());
-
-//routes middleware
-app.use(router);
-
-//express listen
+//server create
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
@@ -39,6 +25,12 @@ const io = socketio(
   },
   { wsEngine: "ws" }
 );
+
+//cors middleware
+app.use(cors());
+
+//routes middleware
+app.use(router);
 
 //socket io event listerner for new connection
 io.on("connection", (socket) => {
