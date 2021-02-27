@@ -27,15 +27,12 @@ const server = app.listen(PORT, () => {
 });
 
 //socket io setup with express server
-const io = socketio(
-  server
-  // ,
-  //  {
-  // cors: {
-  //   origin: "https://baat-chit.netlify.app/",
-  // },
-  // }
-);
+const io = socketio(server, {
+  cors: {
+    origin: "http://baat-chit.netlify.app",
+    methods: ["GET", "POST"],
+  },
+});
 
 //socket io event listerner for new connection
 io.on("connection", (socket) => {
