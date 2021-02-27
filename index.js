@@ -29,7 +29,7 @@ const server = app.listen(PORT, () => {
 //socket io setup with express server
 const io = socketio(server, {
   cors: {
-    origin: "http://baat-chit.netlify.app",
+    origin: "https://baat-chit.netlify.app",
     methods: ["GET", "POST"],
   },
 });
