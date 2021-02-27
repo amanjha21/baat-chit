@@ -14,12 +14,11 @@ const socketio = require("socket.io");
 
 //routes controller
 const router = require("./router");
+//cors middleware
+app.use(cors());
 
 //routes middleware
 app.use(router);
-
-//cors middleware
-app.use(cors());
 
 //express listen
 const PORT = process.env.PORT || 5000;
