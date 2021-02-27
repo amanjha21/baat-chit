@@ -1,0 +1,8 @@
+const express = require("express");
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.send("server started this is / route");
+});
+
+module.exports = router;
