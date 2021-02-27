@@ -16,14 +16,15 @@ const server = http.createServer(app);
 
 //socket io setup with express server
 const io = socketio(
-  server,
-  {
-    cors: {
-      origin: "https://baat-chit.netlify.app",
-      methods: ["GET", "POST"],
-    },
-  },
-  { wsEngine: "ws" }
+  server
+  // ,
+  // {
+  //   cors: {
+  //     origin: "https://baat-chit.netlify.app",
+  //     methods: ["GET", "POST"],
+  //   },
+  // },
+  // { wsEngine: "ws" }
 );
 
 //cors middleware
