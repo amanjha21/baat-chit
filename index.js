@@ -30,15 +30,21 @@ app.use(cors());
 //routes middleware
 app.use(router);
 
+const date = () => {
+  let d = new Date();
+  // return d.toLocaleString([], { hour: "2-digit", minute: "2-digit" });
+  return d;
+};
+
 //socket io event listerner for new connection
 io.on("connect", (socket) => {
-  console.log("New user connected with id: ", socket.id);
+  // console.log("New user connected with id: ", socket.id);
 
   /*-----event listeners for this socket connection are below-----*/
 
   //join event handler
   socket.on("join", ({ name, room }, callback) => {
-    console.log(name, room);
+    // console.log(name, room);
     //try to add user
     const { error, user } = addUser({ id: socket.id, name, room });
     //if there is error return callback to frontend with that error
@@ -52,13 +58,16 @@ io.on("connect", (socket) => {
     socket.join(user.room);
     // emit event for message when admin joins the rooms
     socket.emit("message", {
-      user: "admin",
+      user: " ",
       text: `Hi ${user.name}, Welcome to the room ${user.room}`,
+      date: date(),
     });
     //broadcast joined message to all users of this room
-    socket.broadcast
-      .to(user.room)
-      .emit("message", { user: "admin", text: `${user.name}, has joined!` });
+    socket.broadcast.to(user.room).emit("message", {
+      user: " ",
+      text: `${user.name}, has joined!`,
+      date: date(),
+    });
 
     //send data about users in the room to everybody in this room
     io.to(user.room).emit("roomData", {
@@ -69,36 +78,44 @@ io.on("connect", (socket) => {
     callback();
   });
 
-  // socket.on("reconnect_attempt", () => {
-  //   console.log("reconnect");
-  // });
-
   //send message event handler
   socket.on("sendMessage", (message, callback) => {
     //get user
     const user = getUser(socket.id);
     //emit an event for new message in this room
-    io.to(user.room).emit("message", { user: user.name, text: message });
+    io.to(user.room).emit("message", {
+      user: user.name,
+      text: message,
+      date: date(),
+    });
     callback();
   });
 
-  // socket.on("typing", (name) => {
-  //   //get user
-  //   const user = getUser(socket.id);
-  //   //emit an event for new message in this room
-  //   io.to(user.room).emit("message", { user: "user", text: "name" });
-  // });
+  socket.on("typing", () => {
+    //get user
+    const user = getUser(socket.id);
+    //emit an event for new message in this room
+    socket.broadcast.to(user.room).emit("isTyping", { user: user.name });
+  });
+
+  socket.on("isNotTyping", () => {
+    //get user
+    const user = getUser(socket.id);
+    //emit an event for new message in this room
+    socket.broadcast.to(user.room).emit("stoppedTyping", { user: user.name });
+  });
 
   //for disconnect event
   socket.on("disconnect", () => {
-    console.log("User has left with id: ", socket.id);
+    // console.log("User has left with id: ", socket.id);
     //remove user from users array with it socket id
     const user = removeUser(socket.id);
     if (user) {
       // if user is removed successfully emit message to everyone in this room
       io.to(user.room).emit("message", {
-        user: "admin",
+        user: " ",
         text: `${user.name}, has left!`,
+        date: date(),
       });
       io.to(user.room).emit("roomData", {
         room: user.room,

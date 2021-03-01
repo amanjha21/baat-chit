@@ -2,8 +2,10 @@ const users = [];
 
 const addUser = ({ id, name, room }) => {
   //name conversion to lowercase without spaces
-  name = name.trim().toLowerCase();
-  room = room.trim().toLowerCase();
+  // name = name.trim().toLowerCase();
+  // room = room.trim().toLowerCase();
+  name = name;
+  room = room;
 
   //check if user already exists
   const userExists = users.find(
