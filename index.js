@@ -15,16 +15,14 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
 //socket io setup with express server
-const io = socketio(
-  server,
-  {
-    cors: {
-      origin: "https://baat-chit.netlify.app",
-      methods: ["GET", "POST"],
-    },
+const io = socketio(server, {
+  cors: {
+    // origin: "https://baat-chit.netlify.app",
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
   },
-  { wsEngine: "ws" }
-);
+});
 
 //cors middleware
 app.use(cors());
@@ -33,7 +31,7 @@ app.use(cors());
 app.use(router);
 
 //socket io event listerner for new connection
-io.on("connection", (socket) => {
+io.on("connect", (socket) => {
   console.log("New user connected with id: ", socket.id);
 
   /*-----event listeners for this socket connection are below-----*/
@@ -70,6 +68,10 @@ io.on("connection", (socket) => {
     //callback without error
     callback();
   });
+
+  // socket.on("reconnect_attempt", () => {
+  //   console.log("reconnect");
+  // });
 
   //send message event handler
   socket.on("sendMessage", (message, callback) => {
