@@ -17,8 +17,8 @@ const server = http.createServer(app);
 //socket io setup with express server
 const io = socketio(server, {
   cors: {
-    // origin: "https://baat-chit.netlify.app",
-    origin: "http://localhost:3000",
+    origin: "https://baat-chit.netlify.app",
+    // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true,
   },
